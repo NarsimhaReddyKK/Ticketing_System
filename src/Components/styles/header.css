@@ -23,6 +23,6 @@
     color: whitesmoke;
 }
 
-.header__link:hover{
+.header__link:hover, .header__link:focus{
     color: gray;
 }

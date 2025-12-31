@@ -1,0 +1,42 @@
+.cardsection{
+    border: 2px solid gray;
+    display: grid;
+    place-content: center;
+    width: 10%;
+    height: 20%;
+    padding: 10%;
+    border-radius: 10%;
+    margin-top: 20px;
+    background-color: whitesmoke;
+    font-size: 1rem;
+}
+
+.cardsection:hover, .cardsection:focus{
+    background-color: rgb(233, 232, 232);
+    cursor: pointer;
+}
+
+.card__h1{
+    font-size: 12.8px;
+    white-space: nowrap;
+}
+
+@media screen and (min-width: 428px) {
+    .card__h1{
+        font-size: 20px;
+    }
+}
+
+
+@media screen and (min-width: 700px) {
+    .card__h1{
+        font-size: 30px;
+    }
+
+}
+
+@media screen and (min-width: 1000px) {
+    .cardsection{
+        padding: 5%;
+    }
+}

@@ -8,7 +8,7 @@ export const Header = () => {
             <li className="header__list"><Link className="header__link" to="/">Home</Link></li>
             <li className="header__list"><Link className="header__link" to="/">Admin</Link></li>
             <li className="header__list"><Link className="header__link" to="/form">Form</Link></li>
-            <li className="header__list"><Link className="header__link" to="/">About</Link></li>
+            <li className="header__list"><Link className="header__link" to="/">Tickets</Link></li>
         </ul>
     </div>
   )

@@ -2,4 +2,15 @@
     display: flex;
     justify-content: space-evenly;
     padding: 0.1rem;
+    flex-wrap: wrap;
+}
+
+.card__container>:nth-child(4){
+    display:none;
+}
+
+@media screen and  (min-width: 1000px){
+    .card__container>:nth-child(4){
+        display:inline;
+    }
 }

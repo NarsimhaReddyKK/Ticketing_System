@@ -8,7 +8,7 @@ export const Ticket_Form = () => {
     
     const send =(e:any):void=>{
         e.preventDefault(); 
-        console.log([title, desc, status]);
+        console.log([title, desc, status, new Date()]);
     }
 
   return (
@@ -21,7 +21,7 @@ export const Ticket_Form = () => {
                     <input className="form__input" value={title} onChange={(e)=>{setTitle(e.target.value)}} type="text" placeholder="Enter the title of the Ticket"/> 
                 </p>
                 <p className="form__p">
-                    <label className="form_label" htmlFor="desc">Description: </label>
+                    <label className="form__label" htmlFor="desc">Description: </label>
                     <input type="text" className="form__input" value={desc} onChange={(e)=>{setDesc(e.target.value)}} placeholder="Enter the description of the Ticket"/>
                 </p>
                 <p className="form__p">

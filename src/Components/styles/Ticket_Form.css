@@ -6,6 +6,7 @@
 }
 
 .form{
+    font-size: larger;
     max-width: 800px;
     padding: 1rem;
     display: flex;
@@ -21,16 +22,15 @@ fieldset{
 
 .form__p{
     padding-left: 1rem;
-    width: 70%;
-    display: flex;
-    justify-content: space-between;
+    width: 90%;
     font-family: cursive;
     font-size: large;
     max-width: 600px;
+    display: block;
 }
 
 .form__input, .form__input-select{
-    width: 70%;
+    width: 80%;
     height: 1.3rem;
     font-size: small;
     border: 2px solid gray;
@@ -58,4 +58,11 @@ fieldset{
 .form__button:active{
     background-color: black;
     color: white;
+}
+
+@media screen and (min-width: 468px) {
+    .form__p{
+        display: flex;
+        justify-content: space-between;
+    }
 }

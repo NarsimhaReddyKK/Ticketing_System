@@ -1,0 +1,11 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: hidden;
+}
+
+.login{
+    height: 100vh;
+    background-image: linear-gradient(to top right, black 0%, gray 70%, white);
+}

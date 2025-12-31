@@ -6,10 +6,11 @@
     top: 0;
     border-radius: 0.5rem 0.5rem 0 0;
     display: flex;
+    flex-wrap: wrap;
 }
 
 .header__list{
-    margin: 0 1rem;
+    margin: 0 0.5rem;
     list-style: none;
     font-family: cursive;
 }
@@ -25,4 +26,24 @@
 
 .header__link:hover, .header__link:focus{
     color: gray;
+}
+
+.log{
+    margin-right: 30px;
+}
+
+.logout{
+    display: none;
+    list-style: none;
+    font-family: cursive;
+}
+
+@media  screen and (min-width: 450px) {
+    .logout{
+        display: inline;
+    }
+
+    .log{
+        margin-left: auto;
+    }
 }

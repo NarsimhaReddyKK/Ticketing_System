@@ -1,6 +1,5 @@
 .header{
     background-color: black;
-    color: whitesmoke;
     margin: 0;
     padding: 1rem;
     box-sizing: border-box;
@@ -12,12 +11,18 @@
 .header__list{
     margin: 0 1rem;
     list-style: none;
+    font-family: cursive;
 }
 
 .header__list{
     cursor: pointer;
 }
 
-.header__list:hover{
+.header__link{
+    text-decoration: none;
+    color: whitesmoke;
+}
+
+.header__link:hover{
     color: gray;
 }

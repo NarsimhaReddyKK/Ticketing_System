@@ -1,5 +1,6 @@
 import { useState } from "react"
 import "./styles/Ticket_Form.css"
+import { Header } from "./header";
 
 export const Ticket_Form = () => {
     const [title, setTitle] = useState<string>(""); 
@@ -12,7 +13,9 @@ export const Ticket_Form = () => {
     }
 
   return (
-    <div className="form__container">
+    <>
+      <Header/>
+      <div className="form__container">
         <form className="form">
             <fieldset>
                 <legend className="form__legend"><h1>Ticket Form</h1></legend>
@@ -39,5 +42,6 @@ export const Ticket_Form = () => {
             </fieldset>
         </form>
     </div>
+    </>
   )
 }

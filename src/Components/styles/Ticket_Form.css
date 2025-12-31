@@ -53,6 +53,7 @@ fieldset{
     border-radius: 0.3rem;
     font-size: larger;
     margin-left: 80%;
+    cursor: pointer;
 }
 
 .form__button:active{

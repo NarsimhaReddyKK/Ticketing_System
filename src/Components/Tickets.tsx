@@ -4,7 +4,7 @@ import "./styles/Tickets.css"
 export const Tickets = () => {
   return (
     <div>
-        <Header/>
+        <Header admin={true}/>
         Tickets
     </div>
   )

@@ -1,0 +1,22 @@
+.graph{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 1rem 1rem;
+    flex-direction: column;
+    width: 90%;
+}
+
+.graph__h1{
+    display: block;
+    margin-bottom: 2rem;
+    text-align: center;
+    width: 80%;
+    font-size: medium;
+}
+
+@media screen and (min-width: 485px) {
+    .graph__h1{
+        font-size: 30px;
+    }
+}

@@ -8,17 +8,17 @@ type LoginPropType = {
   setPassword: React.Dispatch<React.SetStateAction<string>>
 }
 
-export const Login = ({email, password, setEmail, setPassword}: LoginPropType) => {
+export const Signup = ({email, password, setEmail, setPassword}: LoginPropType) => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Login attempt:", { email, password });
+    console.log("Signup attempt:", { email, password });
   };
 
   return (
     <div className="login">
       <div className="login-container">
-        <h2>Login</h2>
+        <h2>Sign up</h2>
         <form onSubmit={handleSubmit}>
           <div className="form-group">
             <label htmlFor="email">Email:</label>
@@ -40,9 +40,9 @@ export const Login = ({email, password, setEmail, setPassword}: LoginPropType) =
               required
             />
           </div>
-          <button type="submit">Login</button>
+          <button type="submit">Sign up</button>
         </form>
-        <p className="login__p"><Link to="/signup" className="login__link">Don't have an account? <span className="login__span">Sign up</span></Link></p>
+        <p className="login__p"><Link to="/login" className="login__link">Already have an account? <span className="login__span">Login</span></Link></p>
       </div>
     </div>
   )

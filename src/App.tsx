@@ -6,6 +6,7 @@ import { Login } from './Components/login'
 import { useState } from "react";
 import { Nadmin } from './Components/Nadmin'
 import { Tickets } from './Components/Tickets'
+import { Signup } from './Components/signup'
 
 function App() {
 
@@ -22,6 +23,7 @@ function App() {
         {admin&&<Route path='/admin' element={<Home admin={admin}/>}/>}
         {!admin&&<Route path='/admin' element={<Nadmin/>}/>}
         <Route path='/login' element={<Login email={email} password={password} setEmail={setEmail} setPassword={setPassword}/>}/>
+        <Route path='/signup' element={<Signup email={email} password={password} setEmail={setEmail} setPassword={setPassword}/>}/>
       </Routes>
     </BrowserRouter>
   )

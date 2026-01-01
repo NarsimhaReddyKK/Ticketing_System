@@ -7,6 +7,8 @@ import { useState } from "react";
 import { Nadmin } from './Components/Nadmin'
 import { Tickets } from './Components/Tickets'
 import { Signup } from './Components/signup'
+import { Admin } from './Components/Admin'
+import { Role } from './Components/Role'
 
 function App() {
 
@@ -20,7 +22,8 @@ function App() {
         <Route path='/' element={<Home admin={admin}/>}/>
         <Route path='/form' element={<Ticket_Form/>}/>
         <Route path='/tickets' element={<Tickets/>}/>
-        {admin&&<Route path='/admin' element={<Home admin={admin}/>}/>}
+        {admin&&<Route path='/admin' element={<Admin/>}/>}
+        {admin&&<Route path='/role' element={<Role/>}/>}
         {!admin&&<Route path='/admin' element={<Nadmin/>}/>}
         <Route path='/login' element={<Login email={email} password={password} setEmail={setEmail} setPassword={setPassword}/>}/>
         <Route path='/signup' element={<Signup email={email} password={password} setEmail={setEmail} setPassword={setPassword}/>}/>

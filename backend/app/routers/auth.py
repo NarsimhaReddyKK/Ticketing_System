@@ -20,7 +20,11 @@ async def login(
     if not user or not verify_password(data.password, user.hashed_password):
         raise HTTPException(401, "Invalid credentials")
 
-    token = create_access_token({"sub": user.id, "role": user.role})
+    token = create_access_token({
+        "sub": str(user.id),
+        "role": user.role
+    })
+
 
     response.set_cookie(
         key="access_token",

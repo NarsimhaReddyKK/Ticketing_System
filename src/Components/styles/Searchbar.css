@@ -1,0 +1,40 @@
+.searchbar{
+    width: 60%;
+    display: flex;
+}
+
+.text{
+    display: none;
+}
+
+.searchbar__input{
+    width: 80%;
+    min-height: 30px;
+    padding-left: 1rem;
+    border-radius: 10px 0 0 10px;
+    border: 1px solid black;
+    font-size: larger;
+}
+
+.search__button-input{
+    width: 20%;
+    min-height: 30px;
+    border-radius: 0 10px 10px 0;
+    border: 2px solid black;
+    cursor: pointer;
+}
+
+.search__button-input:hover{
+    background-color: rgb(209, 207, 207);
+}
+
+@media screen and (min-width: 580px) {
+    .text{
+        display: contents;
+        font-size: medium;
+    }
+
+    .icon{
+        display: none;
+    }
+}

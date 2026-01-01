@@ -4,9 +4,10 @@
     padding: 0.2rem;
     border-radius: 0.3rem;
     word-spacing: 0.5rem;
-    width: 25%;
+    width: 200px;
     text-align: center;
     margin-right: 1.5rem;
+    margin-left: auto;
 }
 
 .ticket__state{
@@ -24,6 +25,10 @@
     .ticket__state{
         font-size: large;
     }
+
+    .ticket__status{
+        margin-left: auto;
+    }
 }
 
 @media screen and (min-width: 760px) {
@@ -35,6 +40,7 @@
         padding: 1.2rem;
         text-align: left;
         white-space: nowrap;
+        margin-left: auto ;
     }
 }
 
@@ -45,5 +51,6 @@
 
     .ticket__status{
         word-spacing: 1rem;
+        margin-left: auto;
     }
 }

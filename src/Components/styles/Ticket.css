@@ -1,0 +1,49 @@
+.ticket__status{
+    display: inline;
+    border: 2px solid rgb(57, 57, 57);
+    padding: 0.2rem;
+    border-radius: 0.3rem;
+    word-spacing: 0.5rem;
+    width: 25%;
+    text-align: center;
+    margin-right: 1.5rem;
+}
+
+.ticket__state{
+    color: rgb(82, 82, 250);
+    font-size: 10px;
+}
+
+@media screen and (min-width: 420px) {
+    .ticket__state{
+        font-size: smaller;
+    }
+}
+
+@media screen and (min-width: 550px) {
+    .ticket__state{
+        font-size: large;
+    }
+}
+
+@media screen and (min-width: 760px) {
+    .ticket__state{
+        font-size: medium;
+    }
+
+    .ticket__status{
+        padding: 1.2rem;
+        text-align: left;
+        white-space: nowrap;
+    }
+}
+
+@media screen and (min-width: 880px) {
+    .ticket__state{
+        font-size: large;
+    }
+
+    .ticket__status{
+        word-spacing: 1rem;
+    }
+}

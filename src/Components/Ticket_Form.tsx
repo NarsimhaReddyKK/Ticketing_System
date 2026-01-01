@@ -14,7 +14,7 @@ export const Ticket_Form = () => {
 
   return (
     <>
-      <Header/>
+      <Header admin={true}/>
       <div className="form__container">
         <form className="form">
             <fieldset>

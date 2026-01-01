@@ -5,7 +5,7 @@ export const Role = () => {
   return (
     <div>
         <Header admin={true}/>
-        Role
+        
     </div>
   )
 }

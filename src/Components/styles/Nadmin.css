@@ -1,0 +1,10 @@
+.secured{
+    height: 100vh;
+    display: grid;
+    place-content: center;
+}
+
+.secured__p{
+    font-size: 50px;
+    text-align: center;
+}

@@ -24,7 +24,15 @@ const data: DataPoint[] = [
 export const Graph = () => {
   return (
     <div className="graph">
-        <h1 className="graph__h1">Tickets Created Over Time</h1>
+        <h1 className="graph__h1">Tickets Created Over Time 
+            <select className="graph__select">
+                <option value="All" hidden></option>
+                <option value="All">All</option>
+                <option value="Open">Open</option>
+                <option value="InProgress">InProgress</option>
+                <option value="Closed">Closed</option>
+            </select>
+        </h1>
         <ResponsiveContainer width="80%" height={300}>
         <LineChart data={data}>
             <CartesianGrid />

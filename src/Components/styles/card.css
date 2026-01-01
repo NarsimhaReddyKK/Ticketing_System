@@ -3,7 +3,7 @@
     display: grid;
     place-content: center;
     width: 10%;
-    height: 20%;
+    height: 5%;
     padding: 10%;
     border-radius: 10%;
     margin-top: 20px;
@@ -37,6 +37,10 @@
 
 @media screen and (min-width: 1000px) {
     .cardsection{
-        padding: 5%;
+        padding: 2rem;
+    }
+
+    .card__h1{
+        font-size: 30px;
     }
 }

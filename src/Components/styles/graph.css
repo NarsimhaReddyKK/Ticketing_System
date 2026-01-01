@@ -8,11 +8,16 @@
 }
 
 .graph__h1{
-    display: block;
+    display: inline-block;
     margin-bottom: 2rem;
     text-align: center;
     width: 80%;
     font-size: medium;
+}
+
+.graph__select{
+    margin: 1rem;
+    width: 3%;
 }
 
 @media screen and (min-width: 485px) {

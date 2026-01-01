@@ -4,18 +4,24 @@
     padding: 0.2rem;
     border-radius: 0.3rem;
     word-spacing: 0.5rem;
-    width: 200px;
+    width: 120px;
     text-align: center;
     margin-right: 1.5rem;
     margin-left: auto;
+    flex-shrink: 0;
 }
 
 .ticket__state{
     color: rgb(82, 82, 250);
     font-size: 10px;
+    display: block;
 }
 
 @media screen and (min-width: 420px) {
+    .ticket__status{
+        width: 120px;
+    }
+
     .ticket__state{
         font-size: smaller;
     }
@@ -34,11 +40,13 @@
 @media screen and (min-width: 760px) {
     .ticket__state{
         font-size: medium;
+        display: inline;
     }
 
     .ticket__status{
         padding: 1.2rem;
         text-align: left;
+        width: 150px;
         white-space: nowrap;
         margin-left: auto ;
     }
@@ -52,5 +60,6 @@
     .ticket__status{
         word-spacing: 1rem;
         margin-left: auto;
+        width: 200px;
     }
 }

@@ -24,7 +24,7 @@
     cursor: pointer;
 }
 
-.search__button-input:hover{
+.search__button-input:hover, .search__button-input:focus{
     background-color: rgb(209, 207, 207);
 }
 

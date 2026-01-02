@@ -4,6 +4,7 @@ from datetime import datetime, timezone
 from app.database import Base
 from app.models.enums import TicketStatus
 from sqlalchemy import func
+from sqlalchemy import Enum as SQLEnum
 
 class Ticket(Base):
     __tablename__ = "tickets"
@@ -13,7 +14,9 @@ class Ticket(Base):
     description: Mapped[str] = mapped_column(Text)
 
     status: Mapped[TicketStatus] = mapped_column(
-        default=TicketStatus.OPEN
+        SQLEnum(TicketStatus),
+        default=TicketStatus.OPEN,
+        nullable=False
     )
 
     owner_id: Mapped[int] = mapped_column(ForeignKey("users.id"))

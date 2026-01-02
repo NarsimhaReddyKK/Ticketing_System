@@ -10,6 +10,16 @@ from app.core.dependencies import get_current_user
 router = APIRouter(prefix="/tickets", tags=["Tickets"])
 
 
+@router.get("/")
+async def get_all_tickets(
+    db: AsyncSession = Depends(get_db),
+    current_user = Depends(get_current_user),
+):
+    result = await db.execute(select(Ticket))
+    tickets = result.scalars().all()
+    return tickets
+
+
 @router.post("/", response_model=TicketResponse)
 async def create_ticket(
     data: TicketCreate,
@@ -58,10 +68,6 @@ async def filter_tickets(
     db: AsyncSession = Depends(get_db)
 ):
     query = select(Ticket).where(Ticket.status == status)
-
-    if user.role != "admin":
-        query = query.where(Ticket.owner_id == user.id)
-
     result = await db.execute(query)
     return result.scalars().all()
 

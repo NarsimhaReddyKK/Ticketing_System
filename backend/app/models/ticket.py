@@ -4,6 +4,7 @@ from datetime import datetime, timezone
 from app.database import Base
 from app.models.enums import TicketStatus
 from sqlalchemy import func
+from sqlalchemy import Enum as SQLEnum
 
 class Ticket(Base):
     __tablename__ = "tickets"

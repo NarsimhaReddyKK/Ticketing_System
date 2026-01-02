@@ -4,7 +4,7 @@
     padding: 0.2rem;
     border-radius: 0.3rem;
     word-spacing: 0.5rem;
-    width: 120px;
+    width: 80px;
     text-align: center;
     margin-right: 1.5rem;
     margin-left: auto;
@@ -13,10 +13,23 @@
 
 .ticket__title{
     margin-left: 10px;
+    margin-top: 0;
+    max-width: 500px;
+    font-family: cursive;
+}
+
+.ticket__title-span{
+    font-size: 30px;
+    font-weight: 500;
+    margin-left: 10px;
+    font-family: sans-serif;
 }
 
 .ticket__id{
     margin-left: 10px;
+    width: 50%;
+    white-space: nowrap;
+    margin-right: 20px;
     /* font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif; */
 } 
 
@@ -25,13 +38,26 @@
     /* font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif; */
 }
 
+.ticket__header{
+    display: flex;
+    width: 100px;
+}
+
+.ticket__timestamp{
+    font-size: smaller;
+    font-weight: lighter;
+    margin-top: 5%;
+    margin-right: 10%;
+    white-space: nowrap;
+}
+
 .ticket__state{
     color: rgb(82, 82, 250);
     font-size: 10px;
     display: block;
 }
 
-@media screen and (min-width: 420px) {
+@media screen and (min-width: 450px) {
     .ticket__status{
         width: 120px;
     }
@@ -42,6 +68,10 @@
 }
 
 @media screen and (min-width: 550px) {
+    .ticket__header{
+        width: 250px;
+    }
+
     .ticket__state{
         font-size: large;
     }
@@ -52,6 +82,10 @@
 }
 
 @media screen and (min-width: 760px) {
+    .ticket__header{
+        width: 300px;
+    }
+
     .ticket__state{
         font-size: medium;
         display: inline;
@@ -68,12 +102,13 @@
 
 @media screen and (min-width: 880px) {
     .ticket__state{
-        font-size: large;
+        font-size: 25px;
     }
 
     .ticket__status{
         word-spacing: 1rem;
         margin-left: auto;
         width: 200px;
+        font-size: 30px;
     }
 }

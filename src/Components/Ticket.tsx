@@ -1,16 +1,22 @@
 import "./styles/Ticket.css"
 
 type TicketProp ={
+    id:number,
+    title:string,
     state: string,
-    desc: string
+    desc: string,
+    timestamp: string
 }
 
-export const Ticket = ({state, desc}:TicketProp) => {
+export const Ticket = ({id, title, state, desc, timestamp}:TicketProp) => {
   return (
     <div className="ticket">
         <div className="ticket__details">
-            <h2 className="ticket__id">Id: </h2>
-            <h1 className="ticket__title">Title: </h1>
+          <div className="ticket__header">
+            <h2 className="ticket__id">Id: {id} </h2>
+            <span className="ticket__timestamp">{timestamp}</span>
+          </div>
+            <h1 className="ticket__title">Title: <span className="ticket__title-span">{title}</span></h1>
             <h2 className="ticket__id">Description: </h2>
             <p className="ticket__p">{desc}</p>
         </div>

@@ -58,7 +58,7 @@ html, body {
     box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
 }
 
-button[type="submit"] {
+.login-b {
     width: 100%;
     padding: 0.75rem;
     background-color: #007bff;
@@ -70,7 +70,7 @@ button[type="submit"] {
     transition: background-color 0.3s;
 }
 
-button[type="submit"]:hover {
+.login-b:hover {
     background-color: #0056b3;
 }
 

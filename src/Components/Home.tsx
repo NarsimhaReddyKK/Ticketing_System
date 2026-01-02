@@ -4,7 +4,7 @@ import { Header } from "./header"
 import "./styles/home.css"
 
 type HomeProps ={
-  admin:boolean
+  admin:string
 }
 
 export const Home = ({admin}:HomeProps) => {

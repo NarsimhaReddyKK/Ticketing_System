@@ -14,18 +14,19 @@ function App() {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [admin, setAdmin] = useState(true);
+  const [admin, setAdmin] = useState("admin");
 
   return (
     <BrowserRouter>
       <Routes>
         <Route path='/' element={<Home admin={admin}/>}/>
-        <Route path='/form' element={<Ticket_Form/>}/>
-        <Route path='/tickets' element={<Tickets/>}/>
-        {admin&&<Route path='/admin' element={<Admin/>}/>}
-        {admin&&<Route path='/role' element={<Role/>}/>}
-        {!admin&&<Route path='/admin' element={<Nadmin/>}/>}
-        <Route path='/login' element={<Login email={email} password={password} setEmail={setEmail} setPassword={setPassword}/>}/>
+        <Route path='/form' element={<Ticket_Form admin={admin}/>}/>
+        <Route path='/tickets' element={<Tickets admin={admin}/>}/>
+        {admin==="admin"&&<Route path='/admin' element={<Admin admin={admin}/>}/>}
+        {admin==="admin"&&<Route path='/role' element={<Role admin={admin}/>}/>}
+        {admin!=="admin"&&<Route path='/role' element={<Nadmin/>}/>}
+        {admin!=="admin"&&<Route path='/admin' element={<Nadmin/>}/>}
+        <Route path='/login' element={<Login email={email} setEmail={setEmail} setAdmin={setAdmin}/>}/>
         <Route path='/signup' element={<Signup email={email} password={password} setEmail={setEmail} setPassword={setPassword}/>}/>
       </Routes>
     </BrowserRouter>

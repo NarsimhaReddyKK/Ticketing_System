@@ -1,19 +1,57 @@
-import { ChangeTicket } from "./ChangeTicket"
-import { Header } from "./header"
-import { SearchBar } from "./SearchBar"
-import "./styles/Admin.css"
+import { useEffect, useState } from "react";
+import { ChangeTicket } from "./ChangeTicket";
+import { Header } from "./header";
+import { SearchBar } from "./SearchBar";
+import api from "../api/axios";
+import "./styles/Admin.css";
 
-export const Admin = () => {
+type adminProp = {
+  admin: string;
+};
+
+type TicketType = {
+  id: number;
+  title: string;
+  description: string;
+  status: string;
+};
+
+export const Admin = ({ admin }: adminProp) => {
+  const [tickets, setTickets] = useState<TicketType[]>([]);
+
+  // 🔥 load all tickets on page load
+  useEffect(() => {
+    const fetchTickets = async () => {
+      try {
+        const res = await api.get("/tickets/");
+        setTickets(res.data);
+      } catch (err) {
+        console.error("Failed to load tickets", err);
+      }
+    };
+
+    fetchTickets();
+  }, []);
+
   return (
     <div>
-        <Header admin={true}/>
-        <div className="searchbar__container">
-          <SearchBar usage="Tickets"/>
-        </div>
-        <div className="ticket__container">
-            <ChangeTicket desc="Cigarettes are going to get expensive from February 1 as the government on Wednesday notified revised duties on cigarettes and other tobacco products. The revised tax on cigarettes will be based on the length of the stick and as per reports the prices are expected to go up by 20-30 per cent once these hikes are effective."/>
-            <ChangeTicket desc="The revised tax on cigarettes will be based on the length"/>
-        </div>
+      <Header admin={admin} />
+
+      <div className="searchbar__container">
+        <SearchBar usage="Tickets" />
+      </div>
+
+      <div className="ticket__container">
+        {tickets.map((ticket) => (
+          <ChangeTicket
+            key={ticket.id}
+            id={ticket.id}
+            title={ticket.title}
+            desc={ticket.description}
+            status={ticket.status}
+          />
+        ))}
+      </div>
     </div>
-  )
-}
+  );
+};

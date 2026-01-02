@@ -40,7 +40,7 @@ export const Signup = ({email, password, setEmail, setPassword}: LoginPropType) 
               required
             />
           </div>
-          <button type="submit">Sign up</button>
+          <button type="submit" className="login-b">Sign up</button>
         </form>
         <p className="login__p"><Link to="/login" className="login__link">Already have an account? <span className="login__span">Login</span></Link></p>
       </div>

@@ -3,10 +3,14 @@ import { SearchBar } from "./SearchBar"
 import "./styles/Role.css"
 import { User } from "./User"
 
-export const Role = () => {
+type RoleProp ={
+  admin:string
+}
+
+export const Role = ({admin}:RoleProp) => {
   return (
     <div>
-        <Header admin={true}/>
+        <Header admin={admin}/>
         <div className="searchbar__container">
           <SearchBar usage="User"/>
         </div>

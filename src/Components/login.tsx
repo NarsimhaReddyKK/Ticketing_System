@@ -1,18 +1,38 @@
 import "./styles/login.css"
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import api from "../api/axios";
+import { useState } from "react";
 
 type LoginPropType = {
   email: string,
-  password: any,
   setEmail: React.Dispatch<React.SetStateAction<string>>,
-  setPassword: React.Dispatch<React.SetStateAction<string>>
+  setAdmin: React.Dispatch<React.SetStateAction<string>>
 }
 
-export const Login = ({email, password, setEmail, setPassword}: LoginPropType) => {
-
-  const handleSubmit = (e: React.FormEvent) => {
+export const Login = ({email, setEmail, setAdmin}: LoginPropType) => {
+  const [password, setPassword] = useState<string>("")
+  const [error, setError] = useState<string|undefined>()
+  const navigate = useNavigate();
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     console.log("Login attempt:", { email, password });
+
+    try{
+      const res = await api.post("/auth/login", {
+        email,
+        password
+      })
+
+      const {role} = res.data;
+      setAdmin(role);
+      navigate("/");
+    }catch(err:any){
+      if (err.response?.status === 401) {
+        setError("Invalid email or password");
+      } else {
+        setError("Something went wrong. Try again.");
+      }
+    }
   };
 
   return (
@@ -40,8 +60,9 @@ export const Login = ({email, password, setEmail, setPassword}: LoginPropType) =
               required
             />
           </div>
-          <button type="submit">Login</button>
+          <button className="login-b" type="submit">Login</button>
         </form>
+        {error&&<p>{error}</p>}
         <p className="login__p"><Link to="/signup" className="login__link">Don't have an account? <span className="login__span">Sign up</span></Link></p>
       </div>
     </div>

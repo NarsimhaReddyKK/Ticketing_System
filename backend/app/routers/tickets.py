@@ -15,7 +15,13 @@ async def get_all_tickets(
     db: AsyncSession = Depends(get_db),
     current_user = Depends(get_current_user),
 ):
-    result = await db.execute(select(Ticket))
+    query = select(Ticket)
+
+    # If not admin, restrict to user's own tickets
+    if current_user.role != "admin":
+        query = query.where(Ticket.owner_id == current_user.id)
+
+    result = await db.execute(query)
     tickets = result.scalars().all()
     return tickets
 
@@ -32,31 +38,6 @@ async def create_ticket(
         owner_id=user.id
     )
     db.add(ticket)
-    await db.commit()
-    await db.refresh(ticket)
-    return ticket
-
-@router.put("/{ticket_id}", response_model=TicketResponse)
-async def update_ticket(
-    ticket_id: int,
-    data: TicketUpdate,
-    user=Depends(get_current_user),
-    db: AsyncSession = Depends(get_db)
-):
-    result = await db.execute(select(Ticket).where(Ticket.id == ticket_id))
-    ticket = result.scalar_one_or_none()
-
-    if not ticket:
-        raise HTTPException(404, "Ticket not found")
-
-    if ticket.owner_id != user.id and user.role != "admin":
-        raise HTTPException(403, "Not allowed")
-
-    if data.title:
-        ticket.title = data.title
-    if data.description:
-        ticket.description = data.description
-
     await db.commit()
     await db.refresh(ticket)
     return ticket

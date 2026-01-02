@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import api from "../api/axios";
 import "./styles/ChangeTicket.css";
 
@@ -15,26 +15,33 @@ export const ChangeTicket = ({
   desc,
   status,
 }: ChangeTicketProp) => {
-  const [currentStatus, setCurrentStatus] = useState<string>(status);
-  const [prevStatus, setPrevStatus] = useState<string>(status);
+  const [currentStatus, setCurrentStatus] = useState(status);
+  const isFirstRender = useRef(true);
 
+  // 🔄 sync if parent updates status
   useEffect(() => {
-    if (currentStatus === prevStatus) return;
+    setCurrentStatus(status);
+  }, [status]);
+
+  // 🔥 update backend when status changes
+  useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
 
     const updateStatus = async () => {
       try {
         await api.patch(`/admin/ticket/${id}?status=${currentStatus}`);
-
-        setPrevStatus(currentStatus);
       } catch (err) {
         console.error("Failed to update ticket", err);
-        setCurrentStatus(prevStatus); 
         alert("Failed to update ticket status");
+        setCurrentStatus(status); // rollback
       }
     };
 
     updateStatus();
-  }, [currentStatus, id, prevStatus]);
+  }, [currentStatus, id, status]);
 
   return (
     <div className="ticket">
@@ -50,15 +57,9 @@ export const ChangeTicket = ({
         value={currentStatus}
         onChange={(e) => setCurrentStatus(e.target.value)}
       >
-        <option value="OPEN" className="ticket__select-option">
-          Open
-        </option>
-        <option value="IN_PROGRESS" className="ticket__select-option">
-          In Progress
-        </option>
-        <option value="RESOLVED" className="ticket__select-option">
-          Resolved
-        </option>
+        <option value="OPEN">Open</option>
+        <option value="IN_PROGRESS">In Progress</option>
+        <option value="RESOLVED">Resolved</option>
       </select>
     </div>
   );

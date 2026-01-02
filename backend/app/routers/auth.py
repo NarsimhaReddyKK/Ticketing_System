@@ -5,6 +5,8 @@ from app.database import get_db
 from app.models.user import User
 from app.core.security import verify_password, create_access_token
 from app.schemas.auth import LoginRequest, LoginResponse
+from app.schemas.user import UserCreate
+from app.core.security import hash_password
 
 router = APIRouter(prefix="/auth", tags=["Auth"])
 
@@ -35,3 +37,36 @@ async def login(
     )
 
     return {"role": user.role}
+
+@router.post("/logout")
+async def logout(response: Response):
+    response.delete_cookie("access_token")
+    return {"message": "Logged out successfully"}
+
+@router.post("/register")
+async def register_user(
+    data: UserCreate,
+    db: AsyncSession = Depends(get_db)
+):
+    # check email exists
+    result = await db.execute(
+        select(User).where(User.email == data.email)
+    )
+    if result.scalar_one_or_none():
+        raise HTTPException(400, "Email already registered")
+
+    user = User(
+        username=data.username,
+        email=data.email,
+        hashed_password=hash_password(data.password),
+        role="user"
+    )
+
+    db.add(user)
+    await db.commit()
+    await db.refresh(user)
+
+    return {
+        "message": "User created successfully",
+        "user_id": user.id
+    }

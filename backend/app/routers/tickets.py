@@ -15,7 +15,13 @@ async def get_all_tickets(
     db: AsyncSession = Depends(get_db),
     current_user = Depends(get_current_user),
 ):
-    result = await db.execute(select(Ticket))
+    query = select(Ticket)
+
+    # If not admin, restrict to user's own tickets
+    if current_user.role != "admin":
+        query = query.where(Ticket.owner_id == current_user.id)
+
+    result = await db.execute(query)
     tickets = result.scalars().all()
     return tickets
 

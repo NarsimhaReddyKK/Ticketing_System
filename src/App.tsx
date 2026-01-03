@@ -21,6 +21,9 @@ type TicketType = {
 function App() {
 
   const [tickets, setTickets] = useState<TicketType[]>([]);
+  const [open, setOpen] = useState<TicketType[]>([]);
+  const [inprogress, setInprogress] = useState<TicketType[]>([]);
+  const [resolved, setResolved] = useState<TicketType[]>([]);
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [admin, setAdmin] = useState("admin");
@@ -30,9 +33,12 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path='/' element={<Home loading={loading} setLoading={setLoading} error={error} setError={setError} tickets={tickets} setTickets={setTickets} admin={admin}/>}/>
+        <Route path='/' element={<Home open={open} setOpen={setOpen} inprogress={inprogress} setInprogress={setInprogress} resolved={resolved} setResolved={setResolved} loading={loading} setLoading={setLoading} error={error} setError={setError} tickets={tickets} setTickets={setTickets} admin={admin}/>}/>
         <Route path='/form' element={<Ticket_Form admin={admin}/>}/>
         <Route path='/tickets' element={<Tickets loading={loading} error={error} tickets={tickets} admin={admin}/>}/>
+        <Route path='/tickets/open' element={<Tickets loading={loading} error={error} tickets={open} admin={admin}/>}/>
+        <Route path='/tickets/inprogress' element={<Tickets loading={loading} error={error} tickets={inprogress} admin={admin}/>}/>
+        <Route path='/tickets/closed' element={<Tickets loading={loading} error={error} tickets={resolved} admin={admin}/>}/>
         {admin==="admin"&&<Route path='/admin' element={<Admin admin={admin}/>}/>}
         {admin==="admin"&&<Route path='/role' element={<Role admin={admin}/>}/>}
         {admin!=="admin"&&<Route path='/role' element={<Nadmin/>}/>}

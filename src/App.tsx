@@ -10,24 +10,35 @@ import { Signup } from './Components/signup'
 import { Admin } from './Components/Admin'
 import { Role } from './Components/Role'
 
+type TicketType = {
+  id: number;
+  title: string;
+  status: string;
+  description: string;
+  updated_at: string;
+};
+
 function App() {
 
+  const [tickets, setTickets] = useState<TicketType[]>([]);
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [username, setUsername] = useState("");
   const [admin, setAdmin] = useState("admin");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(true);
 
   return (
     <BrowserRouter>
       <Routes>
-        <Route path='/' element={<Home admin={admin}/>}/>
+        <Route path='/' element={<Home loading={loading} setLoading={setLoading} error={error} setError={setError} tickets={tickets} setTickets={setTickets} admin={admin}/>}/>
         <Route path='/form' element={<Ticket_Form admin={admin}/>}/>
-        <Route path='/tickets' element={<Tickets admin={admin}/>}/>
+        <Route path='/tickets' element={<Tickets loading={loading} error={error} tickets={tickets} admin={admin}/>}/>
         {admin==="admin"&&<Route path='/admin' element={<Admin admin={admin}/>}/>}
         {admin==="admin"&&<Route path='/role' element={<Role admin={admin}/>}/>}
         {admin!=="admin"&&<Route path='/role' element={<Nadmin/>}/>}
         {admin!=="admin"&&<Route path='/admin' element={<Nadmin/>}/>}
         <Route path='/login' element={<Login email={email} setEmail={setEmail} setAdmin={setAdmin}/>}/>
-        <Route path='/signup' element={<Signup email={email} password={password} setEmail={setEmail} setPassword={setPassword}/>}/>
+        <Route path='/signup' element={<Signup username={username} setUsername={setUsername} email={email} setEmail={setEmail}/>}/>
       </Routes>
     </BrowserRouter>
   )

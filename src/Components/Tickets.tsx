@@ -1,13 +1,15 @@
-import { useEffect, useState } from "react";
 import { Header } from "./header";
 import { SearchBar } from "./SearchBar";
 import { Ticket } from "./Ticket";
-import api from "../api/axios";
 import "./styles/Tickets.css";
 
-type TicketProp = {
-  admin: string;
-};
+type TicketProp ={
+  loading: boolean;
+  error: string;
+  admin:string;
+  tickets: TicketType[];
+}
+
 
 type TicketType = {
   id: number;
@@ -17,37 +19,16 @@ type TicketType = {
   updated_at: string;
 };
 
-export const Tickets = ({ admin }: TicketProp) => {
-  const [tickets, setTickets] = useState<TicketType[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-
-  useEffect(() => {
-    const fetchTickets = async () => {
-      try {
-        const res = await api.get("/tickets/");
-        setTickets(res.data);
-        // console.log(typeof res.data[0].updated_at);
-      } catch (err: any) {
-        if (err.response?.status === 401) {
-          setError("You must be logged in");
-        } else {
-          setError("Failed to load tickets");
-        }
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchTickets();
-  }, []); 
+export const Tickets = ({loading, error, admin, tickets}: TicketProp) => {
 
   return (
     <div>
-      <Header admin={admin} />
+      <div className="fixed">
+        <Header admin={admin} />
 
-      <div className="searchbar__container">
+        <div className="searchbar__container">
         <SearchBar usage="Tickets" />
+      </div>
       </div>
 
       <div className="ticket__container">

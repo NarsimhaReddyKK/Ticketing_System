@@ -62,7 +62,7 @@ export const Login = ({email, setEmail, setAdmin}: LoginPropType) => {
           </div>
           <button className="login-b" type="submit">Login</button>
         </form>
-        {error&&<p>{error}</p>}
+        {error&&<p className="err">{error}</p>}
         <p className="login__p"><Link to="/signup" className="login__link">Don't have an account? <span className="login__span">Sign up</span></Link></p>
       </div>
     </div>

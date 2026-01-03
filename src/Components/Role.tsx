@@ -10,10 +10,13 @@ type RoleProp ={
 export const Role = ({admin}:RoleProp) => {
   return (
     <div>
+      <div className="fixed">
+
         <Header admin={admin}/>
         <div className="searchbar__container">
           <SearchBar usage="User"/>
         </div>
+      </div>
         <div className="ticket__container">
             <User/>
         </div>

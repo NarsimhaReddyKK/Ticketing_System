@@ -1,0 +1,7 @@
+.fixed{
+    position: sticky;
+    top: 0;
+    background-color: white;
+    padding-bottom: 8px;
+    box-shadow: 0 -3px 8px black;
+}

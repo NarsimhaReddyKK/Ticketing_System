@@ -14,6 +14,7 @@ type TicketType = {
   title: string;
   description: string;
   status: string;
+  updated_at: string;
 };
 
 export const Admin = ({ admin }: adminProp) => {
@@ -35,10 +36,13 @@ export const Admin = ({ admin }: adminProp) => {
 
   return (
     <div>
+      <div className="fixed">
+
       <Header admin={admin} />
 
       <div className="searchbar__container">
         <SearchBar usage="Tickets" />
+      </div>
       </div>
 
       <div className="ticket__container">
@@ -49,6 +53,14 @@ export const Admin = ({ admin }: adminProp) => {
             title={ticket.title}
             desc={ticket.description}
             status={ticket.status}
+            time={new Date(ticket.updated_at).toLocaleDateString("en-GB", {
+                hour: "numeric",
+                minute: "2-digit",
+                hour12: true,
+                day: "2-digit",
+                month: "short",
+                year: "numeric",
+              })}
           />
         ))}
       </div>

@@ -2,12 +2,19 @@ import { Header } from "./header";
 import { SearchBar } from "./SearchBar";
 import { Ticket } from "./Ticket";
 import "./styles/Tickets.css";
+import { useEffect } from "react";
+import api from "../api/axios";
 
 type TicketProp ={
+  setTickets: React.Dispatch<React.SetStateAction<TicketType[]>>;
   loading: boolean;
   error: string;
   admin:string;
   tickets: TicketType[];
+  setOpen: React.Dispatch<React.SetStateAction<TicketType[]>>;
+  setInprogress: React.Dispatch<React.SetStateAction<TicketType[]>>;
+  setResolved: React.Dispatch<React.SetStateAction<TicketType[]>>;
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 
@@ -19,7 +26,27 @@ type TicketType = {
   updated_at: string;
 };
 
-export const Tickets = ({loading, error, admin, tickets}: TicketProp) => {
+export const Tickets = ({setLoading, setTickets, setOpen, setInprogress, setResolved, loading, error, admin, tickets}: TicketProp) => {
+
+    useEffect(() => {
+    const fetchTickets = async () => {
+      try {
+        const res = await api.get<TicketType[]>("/tickets/");
+        const data = res.data;
+        setTickets(data);
+        setOpen(data.filter(t => t.status === "OPEN"));
+        setResolved(data.filter(t => t.status === "RESOLVED"));
+        setInprogress(data.filter(t => t.status === "IN_PROGRESS"));
+      } catch (err) {
+        console.error("Failed to fetch tickets", err);
+      }finally{
+        setLoading(false);
+      }
+    };
+
+    fetchTickets();
+  }, [setTickets]);
+
 
   return (
     <div>

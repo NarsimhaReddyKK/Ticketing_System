@@ -3,7 +3,7 @@ import "./styles/header.css"
 import { Link, useNavigate } from "react-router-dom";
 
 type HeaderProp={
-  admin:string
+  admin:string|null
 }
 
 export const Header = ({admin}:HeaderProp) => {

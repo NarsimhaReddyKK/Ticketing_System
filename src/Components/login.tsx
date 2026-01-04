@@ -6,7 +6,7 @@ import { useState } from "react";
 type LoginPropType = {
   email: string,
   setEmail: React.Dispatch<React.SetStateAction<string>>,
-  setAdmin: React.Dispatch<React.SetStateAction<string>>
+  setAdmin: React.Dispatch<React.SetStateAction<string|null>>
 }
 
 export const Login = ({email, setEmail, setAdmin}: LoginPropType) => {
@@ -24,6 +24,7 @@ export const Login = ({email, setEmail, setAdmin}: LoginPropType) => {
       })
 
       const {role} = res.data;
+      localStorage.setItem("role", role);
       setAdmin(role);
       navigate("/");
     }catch(err:any){

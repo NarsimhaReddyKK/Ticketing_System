@@ -6,7 +6,7 @@ import api from "../api/axios";
 import "./styles/Admin.css";
 
 type adminProp = {
-  admin: string;
+  admin: string|null;
 };
 
 type TicketType = {

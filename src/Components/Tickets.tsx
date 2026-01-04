@@ -9,7 +9,7 @@ type TicketProp ={
   setTickets: React.Dispatch<React.SetStateAction<TicketType[]>>;
   loading: boolean;
   error: string;
-  admin:string;
+  admin:string|null;
   tickets: TicketType[];
   setOpen: React.Dispatch<React.SetStateAction<TicketType[]>>;
   setInprogress: React.Dispatch<React.SetStateAction<TicketType[]>>;

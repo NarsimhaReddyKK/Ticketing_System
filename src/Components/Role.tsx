@@ -4,7 +4,7 @@ import "./styles/Role.css"
 import { User } from "./User"
 
 type RoleProp ={
-  admin:string
+  admin:string|null
 }
 
 export const Role = ({admin}:RoleProp) => {

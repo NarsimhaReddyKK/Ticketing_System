@@ -19,7 +19,7 @@ type HomeProps = {
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
   error: string;
   setError: React.Dispatch<React.SetStateAction<string>>;
-  admin: string;
+  admin: string|null;
   open: TicketType[];
   setOpen: React.Dispatch<React.SetStateAction<TicketType[]>>;
   inprogress: TicketType[];
@@ -128,7 +128,7 @@ export const Home = ({
         </div>
       </div>
 
-      <Graph />
+      <Graph tickets={tickets} open={open} resolved={resolved} inprogress={inprogress}/>
     </div>
   );
 };

@@ -4,7 +4,7 @@ import { Header } from "./header";
 import api from "../api/axios";
 
 type TicketForm_Prop = {
-    admin: string
+    admin: string|null;
 }
 
 export const Ticket_Form = ({ admin }: TicketForm_Prop) => {

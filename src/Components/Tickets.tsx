@@ -16,14 +16,18 @@ type TicketType = {
 
 type TicketProp = {
   setTickets: React.Dispatch<React.SetStateAction<TicketType[]>>;
-  loading: boolean;
-  error: string;
-  admin: string | null;
-  tickets: TicketType[];
   setOpen: React.Dispatch<React.SetStateAction<TicketType[]>>;
   setInprogress: React.Dispatch<React.SetStateAction<TicketType[]>>;
   setResolved: React.Dispatch<React.SetStateAction<TicketType[]>>;
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  loading: boolean;
+  error: string;
+  admin: string | null;
+
+  tickets: TicketType[];
+  open: TicketType[];
+  inprogress: TicketType[];
+  resolved: TicketType[];
 };
 
 export const Tickets = ({
@@ -36,6 +40,9 @@ export const Tickets = ({
   error,
   admin,
   tickets,
+  open,
+  inprogress,
+  resolved,
 }: TicketProp) => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -43,7 +50,6 @@ export const Tickets = ({
   const [filter, setFilter] = useState("All");
 
   useEffect(() => {
-
     const fetchTickets = async () => {
       try {
         setLoading(true);
@@ -65,20 +71,20 @@ export const Tickets = ({
   }, []);
 
   useEffect(() => {
-    switch (location.pathname) {
-      case "/tickets/open":
-        setFilter("Open");
-        break;
-      case "/tickets/inprogress":
-        setFilter("InProgress");
-        break;
-      case "/tickets/closed":
-        setFilter("Closed");
-        break;
-      default:
-        setFilter("All");
-    }
+    if (location.pathname.endsWith("/open")) setFilter("Open");
+    else if (location.pathname.endsWith("/inprogress")) setFilter("InProgress");
+    else if (location.pathname.endsWith("/closed")) setFilter("Closed");
+    else setFilter("All");
   }, [location.pathname]);
+
+  const visibleTickets =
+    filter === "Open"
+      ? open
+      : filter === "InProgress"
+        ? inprogress
+        : filter === "Closed"
+          ? resolved
+          : tickets;
 
   const handleFilterChange = (value: string) => {
     setFilter(value);
@@ -121,16 +127,15 @@ export const Tickets = ({
 
       <div className="ticket__container">
         {loading && <p>Loading tickets...</p>}
-
         {error && <p className="error">{error}</p>}
 
-        {!loading && !error && tickets.length === 0 && (
+        {!loading && !error && visibleTickets.length === 0 && (
           <p>No tickets found</p>
         )}
 
         {!loading &&
           !error &&
-          tickets.map((ticket) => (
+          visibleTickets.map((ticket) => (
             <Ticket
               key={ticket.id}
               id={ticket.id}

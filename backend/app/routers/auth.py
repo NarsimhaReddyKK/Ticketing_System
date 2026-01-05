@@ -32,7 +32,7 @@ async def login(
         key="access_token",
         value=token,
         httponly=True,
-        secure=False,  # True in production
+        secure=False,  
         samesite="lax"
     )
 

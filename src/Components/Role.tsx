@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Header } from "./header";
 import { SearchBar } from "./SearchBar";
 import "./styles/Role.css";
@@ -18,8 +18,11 @@ type UserResponse = {
 
 export const Role = ({ admin }: RoleProp) => {
   const [users, setUsers] = useState<UserResponse[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  const [searchInput, setSearchInput] = useState("");
+  const [isSearching, setIsSearching] = useState(false);
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -28,10 +31,10 @@ export const Role = ({ admin }: RoleProp) => {
       try {
         const res = await api.get<UserResponse[]>("/admin/users");
         setUsers(res.data);
-        console.log("users:", res.data);
-      } catch (err: any) {
+      } catch (err) {
         console.error(err);
         setError("Failed to fetch users");
+        setUsers([]);
       } finally {
         setLoading(false);
       }
@@ -40,22 +43,72 @@ export const Role = ({ admin }: RoleProp) => {
     fetchUsers();
   }, []);
 
+  const searchResults = useMemo(() => {
+    if (!searchInput.trim()) return [];
+
+    return users
+      .filter(
+        (u) =>
+          u.username.toLowerCase().includes(searchInput.toLowerCase()) ||
+          u.email.toLowerCase().includes(searchInput.toLowerCase()) ||
+          u.id.toString().includes(searchInput)
+      )
+      .slice(0, 6);
+  }, [searchInput, users]);
+
+  const searchedUsers = useMemo(() => {
+    if (!isSearching) return users;
+
+    return users.filter(
+      (u) =>
+        u.username.toLowerCase().includes(searchInput.toLowerCase()) ||
+        u.email.toLowerCase().includes(searchInput.toLowerCase()) ||
+        u.id.toString().includes(searchInput)
+    );
+  }, [isSearching, searchInput, users]);
+
+  const handleSearch = () => {
+    if (!searchInput.trim()) return;
+    setIsSearching(true);
+  };
+
+  const handleSelect = (user: UserResponse) => {
+    console.log("Selected user:", user);
+    setSearchInput(user.username); 
+    setIsSearching(true); 
+  };
+
   return (
     <div>
       <div className="fixed">
         <Header admin={admin} />
+
         <div className="searchbar__container">
-          <SearchBar usage="User" />
+          <SearchBar<UserResponse>
+            value={searchInput}
+            onChange={(v) => {
+              setSearchInput(v);
+              if (!v.trim()) setIsSearching(false);
+            }}
+            onSearch={handleSearch}
+            results={searchResults}
+            onSelect={handleSelect}
+            getLabel={(u) => `#${u.id} — ${u.username} (${u.email})`}
+            placeholder="Search by username, email or ID"
+          />
         </div>
       </div>
 
       <div className="ticket__container">
         {loading && <p>Loading users...</p>}
-        {error && <p style={{ color: "red" }}>{error}</p>}
-        {!loading && !error && users.length === 0 && <p>No users found.</p>}
+        {!loading && error && <p style={{ color: "red" }}>{error}</p>}
+        {!loading && !error && searchedUsers.length === 0 && (
+          <p>No users found.</p>
+        )}
+
         {!loading &&
           !error &&
-          users.map((user) => (
+          searchedUsers.map((user) => (
             <User
               key={user.id}
               id={user.id}

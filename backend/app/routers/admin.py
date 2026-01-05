@@ -38,17 +38,19 @@ async def make_user_normal(
     db: AsyncSession = Depends(get_db),
     admin=Depends(admin_only),
 ):
-    result = await db.execute(select(user).where(user.id == user_id))
+    result = await db.execute(
+        select(User).where(User.id == user_id)
+    )
+
     user = result.scalar_one_or_none()
 
-    if not user:
-        raise HTTPException(404, "User not found")
+    if user is None:
+        raise HTTPException(status_code=404, detail="User not found")
 
     user.role = "user"
     await db.commit()
 
     return {"message": "User demoted to user"}
-
 
 @router.patch("/users/{user_id}/make-admin")
 async def make_user_normal(

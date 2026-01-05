@@ -18,8 +18,10 @@ export const User = ({ email, id, role, username }: UserProp) => {
     try {
       if (r === "user") {
         await api.patch(`/admin/users/${id}/make-user`);
+        alert("Role Updated Successfully");
       } else if (r === "admin") {
         await api.patch(`/admin/users/${id}/make-admin`);
+        alert("Role Updated Successfully");
       } else {
         throw new Error(`Invalid role: ${r}`);
       }

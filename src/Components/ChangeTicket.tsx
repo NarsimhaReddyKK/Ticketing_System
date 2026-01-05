@@ -30,6 +30,7 @@ export const ChangeTicket = ({
 
     try {
       await api.patch(`/admin/ticket/${id}?status=${newStatus}`);
+      alert("Ticket Status Updated Successfully!")
     } catch (err) {
       console.error("Failed to update ticket", err);
       alert("Failed to update ticket status");

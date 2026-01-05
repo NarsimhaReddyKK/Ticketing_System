@@ -3,7 +3,7 @@ import { SearchBar } from "./SearchBar";
 import { Ticket } from "./Ticket";
 import "./styles/Tickets.css";
 import { useEffect, useMemo, useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import api from "../api/axios";
 
 type TicketType = {
@@ -44,11 +44,13 @@ export const Tickets = ({
   inprogress,
   resolved,
 }: TicketProp) => {
-  const navigate = useNavigate();
   const location = useLocation();
 
-  const [filter, setFilter] = useState("All");
+  const [filter, setFilter] = useState<"All" | "Open" | "InProgress" | "Closed">("All");
+  const [searchInput, setSearchInput] = useState("");
+  const [isSearching, setIsSearching] = useState(false);
 
+  /* ================= FETCH TICKETS ================= */
   useEffect(() => {
     const fetchTickets = async () => {
       try {
@@ -60,8 +62,6 @@ export const Tickets = ({
         setOpen(data.filter(t => t.status === "OPEN"));
         setInprogress(data.filter(t => t.status === "IN_PROGRESS"));
         setResolved(data.filter(t => t.status === "RESOLVED"));
-      } catch (err) {
-        console.error("Failed to fetch tickets", err);
       } finally {
         setLoading(false);
       }
@@ -70,6 +70,7 @@ export const Tickets = ({
     fetchTickets();
   }, []);
 
+  /* ================= FILTER BASED ON PATH ================= */
   useEffect(() => {
     if (location.pathname.endsWith("/open")) setFilter("Open");
     else if (location.pathname.endsWith("/inprogress")) setFilter("InProgress");
@@ -77,40 +78,53 @@ export const Tickets = ({
     else setFilter("All");
   }, [location.pathname]);
 
+  /* ================= SEARCH RESULTS ================= */
+  const searchResults = useMemo(() => {
+    if (!searchInput.trim()) return [];
+
+    return tickets
+      .filter(t =>
+        t.title.toLowerCase().includes(searchInput.toLowerCase()) ||
+        t.description.toLowerCase().includes(searchInput.toLowerCase()) ||
+        t.id.toString().includes(searchInput)
+      )
+      .slice(0, 6);
+  }, [searchInput, tickets]);
+
+  const searchedTickets = useMemo(() => {
+    if (!isSearching) return tickets;
+
+    return tickets.filter(t =>
+      t.title.toLowerCase().includes(searchInput.toLowerCase()) ||
+      t.description.toLowerCase().includes(searchInput.toLowerCase()) ||
+      t.id.toString().includes(searchInput)
+    );
+  }, [isSearching, searchInput, tickets]);
+
   const visibleTickets = useMemo(() => {
-    const source =
-      filter === "Open"
-        ? open
-        : filter === "InProgress"
-          ? inprogress
-          : filter === "Closed"
-            ? resolved
-            : tickets;
+    const source = isSearching ? searchedTickets : filter === "Open"
+      ? open
+      : filter === "InProgress"
+      ? inprogress
+      : filter === "Closed"
+      ? resolved
+      : tickets;
 
     return [...source].sort(
       (a, b) =>
-        new Date(b.updated_at).getTime() -
-        new Date(a.updated_at).getTime()
+        new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime()
     );
-  }, [filter, tickets, open, inprogress, resolved]);
+  }, [isSearching, searchedTickets, filter, tickets, open, inprogress, resolved]);
 
+  const handleSearch = () => {
+    if (!searchInput.trim()) return;
+    setIsSearching(true);
+  };
 
-  const handleFilterChange = (value: string) => {
-    setFilter(value);
-
-    switch (value) {
-      case "Open":
-        navigate("/tickets/open");
-        break;
-      case "InProgress":
-        navigate("/tickets/inprogress");
-        break;
-      case "Closed":
-        navigate("/tickets/closed");
-        break;
-      default:
-        navigate("/tickets");
-    }
+  const handleSelect = (ticket: TicketType) => {
+    // Just set the search input and enable searching; do NOT change URL
+    setSearchInput(ticket.title);
+    setIsSearching(true);
   };
 
   return (
@@ -119,12 +133,26 @@ export const Tickets = ({
         <Header admin={admin} />
 
         <div className="searchbar__container">
-          <SearchBar usage="Tickets" />
+          <SearchBar<TicketType>
+            value={searchInput}
+            onChange={(v) => {
+              setSearchInput(v);
+              if (!v.trim()) setIsSearching(false);
+            }}
+            onSearch={handleSearch}
+            results={searchResults}
+            onSelect={handleSelect}
+            getLabel={(t) => `#${t.id} — ${t.title}`}
+            placeholder="Search by title, description or ID"
+          />
 
           <select
             className="graph__select"
             value={filter}
-            onChange={(e) => handleFilterChange(e.target.value)}
+            onChange={(e) => {
+              setFilter(e.target.value as "All" | "Open" | "InProgress" | "Closed");
+              setIsSearching(false);
+            }}
           >
             <option value="All">All</option>
             <option value="Open">Open</option>
@@ -136,32 +164,25 @@ export const Tickets = ({
 
       <div className="ticket__container">
         {loading && <p>Loading tickets...</p>}
-        {error && <p className="error">{error}</p>}
-
-        {!loading && !error && visibleTickets.length === 0 && (
-          <p>No tickets found</p>
-        )}
+        {!loading && error && <p className="error">{error}</p>}
+        {!loading && visibleTickets.length === 0 && <p>No tickets found</p>}
 
         {!loading &&
-          !error &&
-          visibleTickets.map((ticket) => (
+          visibleTickets.map(ticket => (
             <Ticket
               key={ticket.id}
               id={ticket.id}
               title={ticket.title}
               state={ticket.status}
               desc={ticket.description}
-              timestamp={new Date(ticket.updated_at).toLocaleDateString(
-                "en-GB",
-                {
-                  hour: "numeric",
-                  minute: "2-digit",
-                  hour12: true,
-                  day: "2-digit",
-                  month: "short",
-                  year: "numeric",
-                }
-              )}
+              timestamp={new Date(ticket.updated_at).toLocaleDateString("en-GB", {
+                hour: "numeric",
+                minute: "2-digit",
+                hour12: true,
+                day: "2-digit",
+                month: "short",
+                year: "numeric",
+              })}
             />
           ))}
       </div>

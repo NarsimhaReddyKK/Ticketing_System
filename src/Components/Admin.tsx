@@ -28,7 +28,6 @@ export const Admin = ({ admin }: AdminProp) => {
   const [searchInput, setSearchInput] = useState("");
   const [isSearching, setIsSearching] = useState(false);
 
-  /* ================= FETCH TICKETS ================= */
   useEffect(() => {
     const fetchTickets = async () => {
       try {
@@ -38,12 +37,10 @@ export const Admin = ({ admin }: AdminProp) => {
         const res = await api.get<TicketType[]>("/tickets/");
         let data = res.data;
 
-        // Apply filter from select dropdown
         if (filter === "Open") data = data.filter(t => t.status === "OPEN");
         if (filter === "InProgress") data = data.filter(t => t.status === "IN_PROGRESS");
         if (filter === "Closed") data = data.filter(t => t.status === "RESOLVED");
 
-        // Sort by updated_at descending
         data.sort((a, b) => new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime());
 
         setTickets(data);
@@ -57,10 +54,9 @@ export const Admin = ({ admin }: AdminProp) => {
     };
 
     fetchTickets();
-    setIsSearching(false); // reset search when filter changes
+    setIsSearching(false); 
   }, [filter]);
 
-  /* ================= SEARCH RESULTS ================= */
   const searchResults = useMemo(() => {
     if (!searchInput.trim()) return [];
 
@@ -87,14 +83,12 @@ export const Admin = ({ admin }: AdminProp) => {
     return isSearching ? searchedTickets : tickets;
   }, [isSearching, searchedTickets, tickets]);
 
-  /* ================= HANDLERS ================= */
   const handleSearch = () => {
     if (!searchInput.trim()) return;
     setIsSearching(true);
   };
 
   const handleSelect = (ticket: TicketType) => {
-    // Just filter tickets by selecting from dropdown; do not navigate
     setSearchInput(ticket.title);
     setIsSearching(true);
   };
@@ -109,6 +103,7 @@ export const Admin = ({ admin }: AdminProp) => {
         <Header admin={admin} />
 
         <div className="searchbar__container">
+          <p className="count">Count: {visibleTickets.length}</p>
           <SearchBar<TicketType>
             value={searchInput}
             onChange={(v) => {

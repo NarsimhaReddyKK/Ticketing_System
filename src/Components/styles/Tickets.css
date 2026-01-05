@@ -5,3 +5,27 @@
     padding-bottom: 8px;
     box-shadow: 0 -3px 8px black;
 }
+
+.count{
+    margin: 0;
+    display: grid;
+    place-content: center;
+    padding-right: 0.5em;
+    font-family: sans-serif;
+    font-size: 10px;
+    white-space: nowrap;
+    color: rgba(0, 0, 0, 0.726);
+}
+
+@media screen and (min-width: 420px) {
+    .count{
+        padding-right: 1rem;
+    }
+}
+
+@media screen and (min-width: 720px) {
+    .count{
+        padding-right: 3rem;
+        font-size: small;
+    }
+}

@@ -1,9 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
 import { Header } from "./header";
 import { SearchBar } from "./SearchBar";
-import "./styles/Role.css";
 import { User } from "./User";
 import api from "../api/axios";
+import "./styles/Role.css";
 
 type RoleProp = {
   admin: string | null;
@@ -16,24 +16,33 @@ type UserResponse = {
   role: string;
 };
 
+type FilterType = "All" | "user" | "admin";
+
 export const Role = ({ admin }: RoleProp) => {
   const [users, setUsers] = useState<UserResponse[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [filter, setFilter] = useState<FilterType>("All");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const [searchInput, setSearchInput] = useState("");
   const [isSearching, setIsSearching] = useState(false);
 
   useEffect(() => {
     const fetchUsers = async () => {
-      setLoading(true);
-      setError(null);
       try {
+        setLoading(true);
+        setError("");
+
         const res = await api.get<UserResponse[]>("/admin/users");
-        setUsers(res.data);
+        let data = res.data;
+
+        if (filter === "user") data = data.filter(u => u.role === "user");
+        if (filter === "admin") data = data.filter(u => u.role === "admin");
+
+        setUsers(data);
       } catch (err) {
-        console.error(err);
-        setError("Failed to fetch users");
+        console.error("Failed to fetch users", err);
+        setError("Failed to fetch users. Please try again.");
         setUsers([]);
       } finally {
         setLoading(false);
@@ -41,7 +50,8 @@ export const Role = ({ admin }: RoleProp) => {
     };
 
     fetchUsers();
-  }, []);
+    setIsSearching(false);
+  }, [filter]);
 
   const searchResults = useMemo(() => {
     if (!searchInput.trim()) return [];
@@ -67,15 +77,22 @@ export const Role = ({ admin }: RoleProp) => {
     );
   }, [isSearching, searchInput, users]);
 
+  const visibleUsers = useMemo(() => {
+    return isSearching ? searchedUsers : users;
+  }, [isSearching, searchedUsers, users]);
+
   const handleSearch = () => {
     if (!searchInput.trim()) return;
     setIsSearching(true);
   };
 
   const handleSelect = (user: UserResponse) => {
-    console.log("Selected user:", user);
-    setSearchInput(user.username); 
-    setIsSearching(true); 
+    setSearchInput(user.username);
+    setIsSearching(true);
+  };
+
+  const handleFilterChange = (value: FilterType) => {
+    setFilter(value);
   };
 
   return (
@@ -84,11 +101,13 @@ export const Role = ({ admin }: RoleProp) => {
         <Header admin={admin} />
 
         <div className="searchbar__container">
+          <p className="count">Count: {visibleUsers.length}</p>
+
           <SearchBar<UserResponse>
             value={searchInput}
             onChange={(v) => {
               setSearchInput(v);
-              if (!v.trim()) setIsSearching(false);
+              setIsSearching(false);
             }}
             onSearch={handleSearch}
             results={searchResults}
@@ -96,19 +115,31 @@ export const Role = ({ admin }: RoleProp) => {
             getLabel={(u) => `#${u.id} — ${u.username} (${u.email})`}
             placeholder="Search by username, email or ID"
           />
+
+          <select
+            className="graph__select"
+            value={filter}
+            onChange={(e) =>
+              handleFilterChange(e.target.value as FilterType)
+            }
+          >
+            <option value="All">All</option>
+            <option value="user">User</option>
+            <option value="admin">Admin</option>
+          </select>
         </div>
       </div>
 
       <div className="ticket__container">
         {loading && <p>Loading users...</p>}
-        {!loading && error && <p style={{ color: "red" }}>{error}</p>}
-        {!loading && !error && searchedUsers.length === 0 && (
-          <p>No users found.</p>
+        {!loading && error && <p className="error">{error}</p>}
+        {!loading && !error && visibleUsers.length === 0 && (
+          <p>No users found</p>
         )}
 
         {!loading &&
           !error &&
-          searchedUsers.map((user) => (
+          visibleUsers.map((user) => (
             <User
               key={user.id}
               id={user.id}

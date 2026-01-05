@@ -62,6 +62,18 @@
     display: block;
 }
 
+.opent{
+    color: rgb(188, 3, 3);
+}
+
+.resolvedt{
+    color: rgb(1, 99, 1);
+}
+
+.inprogresst{
+    color: rgb(0, 0, 179);
+}
+
 @media screen and (min-width: 450px) {
 
     .ticket__status{

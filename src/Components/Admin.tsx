@@ -5,7 +5,7 @@ import { SearchBar } from "./SearchBar";
 import api from "../api/axios";
 import "./styles/Admin.css";
 
-type adminProp = {
+type AdminProp = {
   admin: string | null;
 };
 
@@ -17,36 +17,37 @@ type TicketType = {
   updated_at: string;
 };
 
-export const Admin = ({ admin }: adminProp) => {
-  const [tickets, setTickets] = useState<TicketType[]>([]);
-  const [filter, setFilter] = useState("All");
-  const [loading, setLoading] = useState(false);
+type FilterType = "All" | "Open" | "InProgress" | "Closed";
 
-  const fetchTickets = async (currentFilter: string) => {
+export const Admin = ({ admin }: AdminProp) => {
+  const [tickets, setTickets] = useState<TicketType[]>([]);
+  const [filter, setFilter] = useState<FilterType>("All");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  const fetchTickets = async (currentFilter: FilterType) => {
     try {
       setLoading(true);
+      setError(""); 
+
       const res = await api.get<TicketType[]>("/tickets/");
       let data = res.data;
 
-      if (currentFilter === "Open") {
-        data = data.filter(t => t.status === "OPEN");
-      } else if (currentFilter === "InProgress") {
-        data = data.filter(t => t.status === "IN_PROGRESS");
-      } else if (currentFilter === "Closed") {
-        data = data.filter(t => t.status === "RESOLVED");
-      }
+      if (currentFilter === "Open") data = data.filter(t => t.status === "OPEN");
+      else if (currentFilter === "InProgress") data = data.filter(t => t.status === "IN_PROGRESS");
+      else if (currentFilter === "Closed") data = data.filter(t => t.status === "RESOLVED");
+
+      data.sort((a, b) => new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime());
 
       setTickets(data);
     } catch (err) {
       console.error("Failed to load tickets", err);
+      setError("Failed to load tickets. Please try again.");
+      setTickets([]);
     } finally {
       setLoading(false);
     }
   };
-
-  useEffect(() => {
-    fetchTickets(filter);
-  }, []);
 
   useEffect(() => {
     fetchTickets(filter);
@@ -63,7 +64,7 @@ export const Admin = ({ admin }: adminProp) => {
           <select
             className="graph__select"
             value={filter}
-            onChange={(e) => setFilter(e.target.value)}
+            onChange={(e) => setFilter(e.target.value as FilterType)}
           >
             <option value="All">All</option>
             <option value="Open">Open</option>
@@ -76,11 +77,12 @@ export const Admin = ({ admin }: adminProp) => {
       <div className="ticket__container">
         {loading && <p>Loading tickets...</p>}
 
-        {!loading && tickets.length === 0 && (
-          <p>No tickets found</p>
-        )}
+        {!loading && error && <p className="error">{error}</p>}
+
+        {!loading && !error && tickets.length === 0 && <p>No tickets found</p>}
 
         {!loading &&
+          !error &&
           tickets.map((ticket) => (
             <ChangeTicket
               key={ticket.id}

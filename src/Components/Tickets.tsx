@@ -2,7 +2,7 @@ import { Header } from "./header";
 import { SearchBar } from "./SearchBar";
 import { Ticket } from "./Ticket";
 import "./styles/Tickets.css";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import api from "../api/axios";
 
@@ -77,14 +77,23 @@ export const Tickets = ({
     else setFilter("All");
   }, [location.pathname]);
 
-  const visibleTickets =
-    filter === "Open"
-      ? open
-      : filter === "InProgress"
-        ? inprogress
-        : filter === "Closed"
-          ? resolved
-          : tickets;
+  const visibleTickets = useMemo(() => {
+    const source =
+      filter === "Open"
+        ? open
+        : filter === "InProgress"
+          ? inprogress
+          : filter === "Closed"
+            ? resolved
+            : tickets;
+
+    return [...source].sort(
+      (a, b) =>
+        new Date(b.updated_at).getTime() -
+        new Date(a.updated_at).getTime()
+    );
+  }, [filter, tickets, open, inprogress, resolved]);
+
 
   const handleFilterChange = (value: string) => {
     setFilter(value);

@@ -14,6 +14,7 @@ export const Header = ({admin}:HeaderProp) => {
       navigate("/login");
       console.log(res.data);
     }catch(err){
+      localStorage.removeItem("role");
       console.log("Failed to login: ", err);
     }
   }

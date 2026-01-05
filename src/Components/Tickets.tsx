@@ -50,7 +50,6 @@ export const Tickets = ({
   const [searchInput, setSearchInput] = useState("");
   const [isSearching, setIsSearching] = useState(false);
 
-  /* ================= FETCH TICKETS ================= */
   useEffect(() => {
     const fetchTickets = async () => {
       try {
@@ -70,7 +69,6 @@ export const Tickets = ({
     fetchTickets();
   }, []);
 
-  /* ================= FILTER BASED ON PATH ================= */
   useEffect(() => {
     if (location.pathname.endsWith("/open")) setFilter("Open");
     else if (location.pathname.endsWith("/inprogress")) setFilter("InProgress");
@@ -78,7 +76,6 @@ export const Tickets = ({
     else setFilter("All");
   }, [location.pathname]);
 
-  /* ================= SEARCH RESULTS ================= */
   const searchResults = useMemo(() => {
     if (!searchInput.trim()) return [];
 
@@ -122,7 +119,6 @@ export const Tickets = ({
   };
 
   const handleSelect = (ticket: TicketType) => {
-    // Just set the search input and enable searching; do NOT change URL
     setSearchInput(ticket.title);
     setIsSearching(true);
   };
@@ -133,6 +129,7 @@ export const Tickets = ({
         <Header admin={admin} />
 
         <div className="searchbar__container">
+          <p className="count">Count: {visibleTickets.length}</p>
           <SearchBar<TicketType>
             value={searchInput}
             onChange={(v) => {

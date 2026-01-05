@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import "./App.css";
 import { Ticket_Form } from "./Components/Ticket_Form";
 import { Home } from "./Components/Home";
@@ -29,6 +29,7 @@ function App() {
   const [admin, setAdmin] = useState<string | null>("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("role"));
 
   useEffect(() => {
     const role = localStorage.getItem("role");
@@ -40,7 +41,7 @@ function App() {
       <Routes>
         <Route
           path="/"
-          element={
+          element={isLoggedIn ? (
             <Home
               open={open}
               setOpen={setOpen}
@@ -56,8 +57,11 @@ function App() {
               setTickets={setTickets}
               admin={admin}
             />
-          }
+          ) : (
+            <Navigate to="/login" replace />
+          )}
         />
+
         <Route path="/form" element={<Ticket_Form admin={admin} />} />
         <Route
           path="/tickets/*"
@@ -95,6 +99,8 @@ function App() {
           }
         />
         <Route path="/unauthorized" element={<Nadmin />} />
+
+        {/* Login and Signup */}
         <Route
           path="/login"
           element={<Login email={email} setEmail={setEmail} setAdmin={setAdmin} />}

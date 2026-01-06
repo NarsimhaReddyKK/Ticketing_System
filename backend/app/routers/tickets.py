@@ -6,6 +6,7 @@ from app.models.ticket import Ticket
 from app.schemas.ticket import TicketCreate, TicketUpdate, TicketResponse
 from app.models.enums import TicketStatus
 from app.core.dependencies import get_current_user
+from sqlalchemy.orm import joinedload
 
 router = APIRouter(prefix="/tickets", tags=["Tickets"])
 

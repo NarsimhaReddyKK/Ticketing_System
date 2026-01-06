@@ -10,20 +10,39 @@ from app.core.dependencies import get_current_user
 router = APIRouter(prefix="/tickets", tags=["Tickets"])
 
 
-@router.get("/")
+@router.get("/", response_model=list[TicketResponse])
 async def get_all_tickets(
     db: AsyncSession = Depends(get_db),
     current_user = Depends(get_current_user),
 ):
-    query = select(Ticket)
+    query = select(Ticket).options(joinedload(Ticket.owner))
 
-    # If not admin, restrict to user's own tickets
+    # Non-admin → only own tickets
     if current_user.role != "admin":
         query = query.where(Ticket.owner_id == current_user.id)
 
     result = await db.execute(query)
     tickets = result.scalars().all()
-    return tickets
+
+    # Build response manually to control admin-only fields
+    response = []
+    for ticket in tickets:
+        data = {
+            "id": ticket.id,
+            "title": ticket.title,
+            "description": ticket.description,
+            "status": ticket.status,
+            "owner_id": ticket.owner_id,
+            "created_at": ticket.created_at,
+        }
+
+        # Admin gets owner name
+        if current_user.role == "admin":
+            data["owner_name"] = ticket.owner.username
+
+        response.append(data)
+
+    return response
 
 
 @router.post("/", response_model=TicketResponse)
@@ -76,4 +95,3 @@ async def filter_tickets(
     query = select(Ticket).where(Ticket.status == status)
     result = await db.execute(query)
     return result.scalars().all()
-

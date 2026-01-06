@@ -16,6 +16,7 @@ class TicketResponse(BaseModel):
     description: str
     status: TicketStatus
     owner_id: int
+    owner_name: str | None = None
     created_at: datetime
 
     class Config:

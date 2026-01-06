@@ -79,7 +79,7 @@ export const Graph = ({
   return (
     <div className="graph">
       <h1 className="graph__h1">
-        Ticket Updates Over Time
+        Ticket Created Over Time
         <select
           className="graph__select"
           value={filter}

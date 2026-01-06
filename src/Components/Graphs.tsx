@@ -15,7 +15,7 @@ type TicketType = {
   title: string;
   status: string;
   description: string;
-  updated_at: string;
+  created_at: string;
 };
 
 type GraphProp = {
@@ -59,7 +59,7 @@ export const Graph = ({
     const countMap: Record<string, number> = {};
 
     filteredTickets.forEach((ticket) => {
-      const date = new Date(ticket.updated_at)
+      const date = new Date(ticket.created_at)
         .toISOString()
         .split("T")[0];
 

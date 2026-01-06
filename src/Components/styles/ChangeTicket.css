@@ -47,6 +47,18 @@
 
 }
 
+
+.select__name{
+    z-index: -1;
+    text-align: left;
+    padding-left: 1rem;
+    font-size: small;
+    opacity: 0.6;
+    margin: 5px 0px;
+    margin-bottom: auto;
+    padding-top: 5px;
+}
+
 .ticket__select:hover{
     background-color: whitesmoke;
     cursor: pointer;

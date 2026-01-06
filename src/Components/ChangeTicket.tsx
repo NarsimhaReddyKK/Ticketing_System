@@ -8,6 +8,7 @@ type ChangeTicketProp = {
   desc: string;
   status: string;
   time: string;
+  name: string | null;
 };
 
 export const ChangeTicket = ({
@@ -16,6 +17,7 @@ export const ChangeTicket = ({
   desc,
   status,
   time,
+  name
 }: ChangeTicketProp) => {
   const [currentStatus, setCurrentStatus] = useState(status);
 
@@ -53,16 +55,18 @@ export const ChangeTicket = ({
 
         <h2 className="ticket__id">{desc}</h2>
       </div>
-
-      <select
-        className="ticket__select"
-        value={currentStatus}
-        onChange={(e) => handleStatusChange(e.target.value)}
-      >
-        <option value="OPEN">Open</option>
-        <option value="IN_PROGRESS">In Progress</option>
-        <option value="RESOLVED">Resolved</option>
-      </select>
+      <div className="select__container">
+        <p className="select__name">By: {name}</p>
+        <select
+          className="ticket__select"
+          value={currentStatus}
+          onChange={(e) => handleStatusChange(e.target.value)}
+        >
+          <option value="OPEN">Open</option>
+          <option value="IN_PROGRESS">In Progress</option>
+          <option value="RESOLVED">Resolved</option>
+        </select>
+      </div>
     </div>
   );
 };

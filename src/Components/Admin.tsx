@@ -14,7 +14,8 @@ type TicketType = {
   title: string;
   description: string;
   status: string;
-  updated_at: string;
+  created_at: string;
+  owner_name: string|null;
 };
 
 type FilterType = "All" | "Open" | "InProgress" | "Closed";
@@ -41,7 +42,7 @@ export const Admin = ({ admin }: AdminProp) => {
         if (filter === "InProgress") data = data.filter(t => t.status === "IN_PROGRESS");
         if (filter === "Closed") data = data.filter(t => t.status === "RESOLVED");
 
-        data.sort((a, b) => new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime());
+        data.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
 
         setTickets(data);
       } catch (err) {
@@ -146,7 +147,8 @@ export const Admin = ({ admin }: AdminProp) => {
               title={ticket.title}
               desc={ticket.description}
               status={ticket.status}
-              time={new Date(ticket.updated_at).toLocaleDateString("en-GB", {
+              name = {ticket.owner_name}
+              time={new Date(ticket.created_at).toLocaleDateString("en-GB", {
                 hour: "numeric",
                 minute: "2-digit",
                 hour12: true,

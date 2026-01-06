@@ -11,7 +11,7 @@ type TicketType = {
   title: string;
   status: string;
   description: string;
-  updated_at: string;
+  created_at: string;
 };
 
 type HomeProps = {

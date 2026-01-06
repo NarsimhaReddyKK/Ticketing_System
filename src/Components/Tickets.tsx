@@ -11,7 +11,7 @@ type TicketType = {
   title: string;
   status: string;
   description: string;
-  updated_at: string;
+  created_at: string;
 };
 
 type TicketProp = {
@@ -109,7 +109,7 @@ export const Tickets = ({
 
     return [...source].sort(
       (a, b) =>
-        new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime()
+        new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
     );
   }, [isSearching, searchedTickets, filter, tickets, open, inprogress, resolved]);
 
@@ -172,7 +172,7 @@ export const Tickets = ({
               title={ticket.title}
               state={ticket.status}
               desc={ticket.description}
-              timestamp={new Date(ticket.updated_at).toLocaleDateString("en-GB", {
+              timestamp={new Date(ticket.created_at).toLocaleDateString("en-GB", {
                 hour: "numeric",
                 minute: "2-digit",
                 hour12: true,

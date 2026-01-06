@@ -16,7 +16,7 @@ type TicketType = {
   title: string;
   status: string;
   description: string;
-  updated_at: string;
+  created_at: string;
 };
 
 function App() {
@@ -100,7 +100,6 @@ function App() {
         />
         <Route path="/unauthorized" element={<Nadmin />} />
 
-        {/* Login and Signup */}
         <Route
           path="/login"
           element={<Login email={email} setEmail={setEmail} setAdmin={setAdmin} />}

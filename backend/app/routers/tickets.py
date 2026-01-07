@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from app.database import get_db
+from sqlalchemy import text
 from app.models.ticket import Ticket
 from app.schemas.ticket import TicketCreate, TicketUpdate, TicketResponse
 from app.models.enums import TicketStatus
@@ -71,3 +72,12 @@ async def filter_tickets(
     query = select(Ticket).where(Ticket.status == status)
     result = await db.execute(query)
     return result.scalars().all()
+
+
+@router.get("/health")
+async def health_check(db: AsyncSession = Depends(get_db)):
+    try:
+        await db.execute(text("SELECT 1"))
+        return {"status": "ok", "db": "connected"}
+    except Exception:
+        raise HTTPException(503, detail="Database unavailable")

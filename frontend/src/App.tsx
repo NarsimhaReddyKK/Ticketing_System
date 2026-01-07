@@ -10,6 +10,7 @@ import { Signup } from "./Components/signup";
 import { Admin } from "./Components/Admin";
 import { Role } from "./Components/Role";
 import RequireAdmin from "./Components/RequireAdmin";
+import { Health } from "./Components/health";
 
 type TicketType = {
   id: number;
@@ -39,6 +40,7 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
+        <Route path="/health" element={<Health/>}/>
         <Route
           path="/"
           element={isLoggedIn ? (

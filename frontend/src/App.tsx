@@ -30,7 +30,7 @@ function App() {
   const [admin, setAdmin] = useState<string | null>("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
-  const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("role"));
+  const [isLoggedIn] = useState(!!localStorage.getItem("role"));
 
   useEffect(() => {
     const role = localStorage.getItem("role");

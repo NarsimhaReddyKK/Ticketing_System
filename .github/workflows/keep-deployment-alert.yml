@@ -17,24 +17,23 @@ jobs:
           -H "Content-Type: application/json" \
           -H "X-API-KEY: ${{ secrets.KEEP_API_KEY }}" \
           -d '{
-            "id": "1234",
-            "name": "Pod '\''api-service-production'\'' lacks memory",
+            "id": "push-${{ github.run_id }}",
+            "name": "GitHub Push Event",
             "status": "firing",
-            "lastReceived": "2021-01-01T00:00:00.000Z",
+            "lastReceived": "${{ github.event.head_commit.timestamp }}",
             "environment": "production",
-            "service": "backend",
-            "source": ["prometheus"],
-            "message": "The pod '\''api-service-production'\'' lacks memory causing high error rate",
-            "description": "Due to the lack of memory, the pod '\''api-service-production'\'' is experiencing high error rate",
-            "severity": "critical",
-            "pushed": true,
-            "url": "https://www.keephq.dev?alertId=1234",
+            "service": "github",
+            "source": ["github"],
+            "message": "New commit pushed",
+            "description": "Commit message: ${{ github.event.head_commit.message }}",
+            "severity": "info",
             "labels": {
-              "pod": "api-service-production",
-              "region": "us-east-1",
-              "cpu": "88",
-              "memory": "100Mi"
+              "repository": "${{ github.repository }}",
+              "branch": "${{ github.ref_name }}",
+              "commit_sha": "${{ github.sha }}",
+              "author": "${{ github.actor }}",
+              "commit_message": "${{ github.event.head_commit.message }}",
+              "commit_timestamp": "${{ github.event.head_commit.timestamp }}"
             },
-            "ticket_url": "https://www.keephq.dev?enrichedTicketId=456",
-            "fingerprint": "1234"
+            "fingerprint": "push-${{ github.run_id }}"
           }'

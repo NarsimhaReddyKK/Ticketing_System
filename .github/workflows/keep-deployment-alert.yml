@@ -1,39 +1,62 @@
-name: Send Alert to KeepHQ
+name: Deployment Events to KeepHQ
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
-      - master
 
 jobs:
-  send-alert:
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Send alert to KeepHQ
+
+      - name: Send Deployment Started
         run: |
           curl -X POST "https://d262zqlbf1m6r4.cloudfront.net/api/backend/alerts/event" \
           -H "Content-Type: application/json" \
           -H "X-API-KEY: ${{ secrets.KEEP_API_KEY }}" \
           -d '{
-            "id": "push-${{ github.run_id }}",
-            "name": "GitHub Push Event",
-            "status": "firing",
-            "lastReceived": "${{ github.event.head_commit.timestamp }}",
-            "environment": "production",
-            "service": "github",
+            "id": "${{ github.run_id }}",
+            "name": "Deployment Started",
+            "status": "started",
+            "environment": "dev",
+            "service": "wise-ai-build",
             "source": ["github"],
-            "message": "New commit pushed",
-            "description": "Commit message: ${{ github.event.head_commit.message }}",
+            "message": "Deployment started",
             "severity": "info",
             "labels": {
               "repository": "${{ github.repository }}",
               "branch": "${{ github.ref_name }}",
               "commit_sha": "${{ github.sha }}",
-              "author": "${{ github.actor }}",
-              "commit_message": "${{ github.event.head_commit.message }}",
-              "commit_timestamp": "${{ github.event.head_commit.timestamp }}"
+              "deployer": "${{ github.actor }}"
             },
-            "fingerprint": "push-${{ github.run_id }}"
+            "fingerprint": "deploy-${{ github.run_id }}"
+          }'
+
+      - name: Deploy Application
+        run: |
+          echo "Deploying application..."
+          sleep 10
+
+      - name: Send Deployment Finished
+        run: |
+          curl -X POST "https://d262zqlbf1m6r4.cloudfront.net/api/backend/alerts/event" \
+          -H "Content-Type: application/json" \
+          -H "X-API-KEY: ${{ secrets.KEEP_API_KEY }}" \
+          -d '{
+            "id": "${{ github.run_id }}",
+            "name": "Deployment Finished",
+            "status": "completed",
+            "environment": "dev",
+            "service": "wise-ai-build",
+            "source": ["github"],
+            "message": "Deployment finished",
+            "severity": "info",
+            "labels": {
+              "repository": "${{ github.repository }}",
+              "branch": "${{ github.ref_name }}"
+            },
+            "fingerprint": "deploy-${{ github.run_id }}"
           }'

@@ -1,33 +1,26 @@
-name: Notify KeepHQ Deployment
+name: Notify KeepHQ on Push
 
 on:
-  deployment_status:
+  push:
+    branches:
+      - main
+      - master
 
 jobs:
   notify-keep:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Send deployment alert to KeepHQ
+      - name: Send push alert to KeepHQ
         run: |
-          STATUS="${{ github.event.deployment_status.state }}"
-
-          if [ "$STATUS" = "in_progress" ]; then
-            ALERT_STATUS="firing"
-            MESSAGE="Deployment started for ${{ github.event.repository.name }}"
-          else
-            ALERT_STATUS="resolved"
-            MESSAGE="Deployment finished for ${{ github.event.repository.name }}"
-          fi
-
           curl -X POST https://d262zqlbf1m6r4.cloudfront.net/api/alerts/event \
           -H "Content-Type: application/json" \
           -H "X-API-KEY: ${{ secrets.KEEP_API_KEY }}" \
           -d "{
-            \"id\": \"deployment-${{ github.event.deployment.id }}\",
-            \"name\": \"GitHub Deployment\",
-            \"status\": \"$ALERT_STATUS\",
+            \"id\": \"push-${{ github.run_id }}\",
+            \"name\": \"GitHub Push Event\",
+            \"status\": \"firing\",
             \"source\": [\"github\"],
             \"severity\": \"info\",
-            \"message\": \"$MESSAGE\"
+            \"message\": \"New push to repository ${{ github.repository }} by ${{ github.actor }}\"
           }"

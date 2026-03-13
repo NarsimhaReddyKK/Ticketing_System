@@ -1,4 +1,4 @@
-name: Notify KeepHQ on Push
+name: Send Alert to KeepHQ
 
 on:
   push:
@@ -7,20 +7,34 @@ on:
       - master
 
 jobs:
-  notify-keep:
+  send-alert:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Send push alert to KeepHQ
+      - name: Send alert to KeepHQ
         run: |
-          curl -X POST https://d262zqlbf1m6r4.cloudfront.net/api/alerts/event \
+          curl -X POST "https://d262zqlbf1m6r4.cloudfront.net/api/backend/alerts/event" \
           -H "Content-Type: application/json" \
           -H "X-API-KEY: ${{ secrets.KEEP_API_KEY }}" \
-          -d "{
-            \"id\": \"push-${{ github.run_id }}\",
-            \"name\": \"GitHub Push Event\",
-            \"status\": \"firing\",
-            \"source\": [\"github\"],
-            \"severity\": \"info\",
-            \"message\": \"New push to repository ${{ github.repository }} by ${{ github.actor }}\"
-          }"
+          -d '{
+            "id": "1234",
+            "name": "Pod '\''api-service-production'\'' lacks memory",
+            "status": "firing",
+            "lastReceived": "2021-01-01T00:00:00.000Z",
+            "environment": "production",
+            "service": "backend",
+            "source": ["prometheus"],
+            "message": "The pod '\''api-service-production'\'' lacks memory causing high error rate",
+            "description": "Due to the lack of memory, the pod '\''api-service-production'\'' is experiencing high error rate",
+            "severity": "critical",
+            "pushed": true,
+            "url": "https://www.keephq.dev?alertId=1234",
+            "labels": {
+              "pod": "api-service-production",
+              "region": "us-east-1",
+              "cpu": "88",
+              "memory": "100Mi"
+            },
+            "ticket_url": "https://www.keephq.dev?enrichedTicketId=456",
+            "fingerprint": "1234"
+          }'

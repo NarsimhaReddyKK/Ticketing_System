@@ -1,49 +1,50 @@
 name: Deployment with KeepHQ Maintenance Window
 
 on:
-push:
-branches:
-- main
-- master
+  push:
+    branches:
+      - main
+      - master
 
 jobs:
-deploy:
-runs-on: ubuntu-latest
+  deploy:
+    runs-on: ubuntu-latest
 
-steps:
-  - name: Create Maintenance Rule in KeepHQ
-    id: create_rule
-    run: |
-      RESPONSE=$(curl -s -X POST "https://d262zqlbf1m6r4.cloudfront.net/api/backend/maintenance" \
-      -H "Content-Type: application/json" \
-      -H "X-API-KEY: ${{ secrets.KEEP_API_KEY }}" \
-      -d '{
-        "name": "Deployment Maintenance Window",
-        "description": "Silence ALL alerts during deployment",
-        "cel_query": "true",
-        "start_time": "'$(date -u +"%Y-%m-%dT%H:%M:%SZ")'",
-        "duration_seconds": 1800,
-        "suppress": true,
-        "enabled": true
-      }')
-
-      echo "API RESPONSE: $RESPONSE"
-
-      RULE_ID=$(echo $RESPONSE | jq -r '.id')
-      echo "RULE_ID=$RULE_ID" >> $GITHUB_ENV
-      echo "Created maintenance rule: $RULE_ID"
-
-  - name: Wait for rule activation
-    run: sleep 10
-
-  - name: Send Deployment Started1111
+    steps:
+      - name: Create Maintenance Rule in KeepHQ
+        id: create_rule
         run: |
-          curl -X POST "https://d262zqlbf1m6r4.cloudfront.net/api/backend/alerts/event" \
+          RESPONSE=$(curl -s -X POST "https://d262zqlbf1m6r4.cloudfront.net/api/backend/maintenance" \
+          -H "Content-Type: application/json" \
+          -H "X-API-KEY: ${{ secrets.KEEP_API_KEY }}" \
+          -d '{
+            "name": "Deployment Maintenance Window",
+            "description": "Silence ALL alerts during deployment",
+            "cel_query": "true",
+            "start_time": "'$(date -u +"%Y-%m-%dT%H:%M:%SZ")'",
+            "duration_seconds": 1800,
+            "suppress": true,
+            "enabled": true
+          }')
+
+          echo "API RESPONSE: $RESPONSE"
+
+          RULE_ID=$(echo "$RESPONSE" | jq -r '.id')
+
+          echo "RULE_ID=$RULE_ID" >> $GITHUB_ENV
+          echo "Created maintenance rule: $RULE_ID"
+
+      - name: Wait for rule activation
+        run: sleep 10
+
+      - name: Send Deployment Started
+        run: |
+          curl -s -X POST "https://d262zqlbf1m6r4.cloudfront.net/api/backend/alerts/event" \
           -H "Content-Type: application/json" \
           -H "X-API-KEY: ${{ secrets.KEEP_API_KEY }}" \
           -d '{
             "id": "${{ github.run_id }}",
-            "name": "Deployment Started111",
+            "name": "Deployment Started",
             "status": "started",
             "environment": "dev",
             "service": "wise-ai-build",
@@ -59,36 +60,36 @@ steps:
             "fingerprint": "deploy-${{ github.run_id }}"
           }'
 
-  - name: Simulate Deployment
-    run: |
-      echo "Starting deployment simulation..."
-      sleep 300
-      echo "Deployment simulation finished."
+      - name: Simulate Deployment
+        run: |
+          echo "Starting deployment simulation..."
+          sleep 300
+          echo "Deployment simulation finished."
 
-  - name: Send Deployment Finished1111
-    run: |
-      curl -X POST "https://d262zqlbf1m6r4.cloudfront.net/api/backend/alerts/event" \
-      -H "Content-Type: application/json" \
-      -H "X-API-KEY: ${{ secrets.KEEP_API_KEY }}" \
-      -d '{
-        "id": "${{ github.run_id }}",
-        "name": "Deployment Finished111",
-        "status": "completed",
-        "environment": "dev",
-        "service": "wise-ai-build",
-        "source": ["github"],
-        "message": "Deployment finished",
-        "severity": "info",
-        "labels": {
-          "repository": "${{ github.repository }}",
-          "branch": "${{ github.ref_name }}"
-        },
-        "fingerprint": "deploy-${{ github.run_id }}"
-      }'
+      - name: Send Deployment Finished
+        run: |
+          curl -s -X POST "https://d262zqlbf1m6r4.cloudfront.net/api/backend/alerts/event" \
+          -H "Content-Type: application/json" \
+          -H "X-API-KEY: ${{ secrets.KEEP_API_KEY }}" \
+          -d '{
+            "id": "${{ github.run_id }}",
+            "name": "Deployment Finished",
+            "status": "completed",
+            "environment": "dev",
+            "service": "wise-ai-build",
+            "source": ["github"],
+            "message": "Deployment finished",
+            "severity": "info",
+            "labels": {
+              "repository": "${{ github.repository }}",
+              "branch": "${{ github.ref_name }}"
+            },
+            "fingerprint": "deploy-${{ github.run_id }}"
+          }'
 
-  - name: Delete Maintenance Rule
-    run: |
-      echo "Deleting maintenance rule $RULE_ID"
+      - name: Delete Maintenance Rule
+        run: |
+          echo "Deleting maintenance rule $RULE_ID"
 
-      curl -X DELETE "https://d262zqlbf1m6r4.cloudfront.net/api/backend/maintenance/$RULE_ID" \
-      -H "X-API-KEY: ${{ secrets.KEEP_API_KEY }}"
+          curl -s -X DELETE "https://d262zqlbf1m6r4.cloudfront.net/api/backend/maintenance/$RULE_ID" \
+          -H "X-API-KEY: ${{ secrets.KEEP_API_KEY }}"
